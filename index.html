@@ -523,14 +523,47 @@
     .fabric-placeholder .fabric-img { width:100%; height:100%; display:block; object-fit:cover; position:absolute; inset:0; z-index:2; }
     .catalog-status { font-size:12px; color:var(--muted); text-align:center; margin:0 0 18px; min-height:18px; }
     @media(max-width:650px) { .brand-logo img { height:38px; max-width:190px; } footer .brand-logo img {height:40px;} }
+
+    /* PATCHWORK : identité et grand visuel d'accueil */
+    header { height:115px; background:rgba(255,255,255,.89); backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px); }
+    .nav { max-width:none; padding:0 clamp(18px,5vw,90px); }
+    .logo.brand-logo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; min-width:0; }
+    .brand-logo img { height:65px; max-width:min(320px,55vw); }
+    .brand-subtitle { display:flex; align-items:center; justify-content:center; gap:13px; width:100%; color:#16243b; font:italic 17px Georgia,serif; letter-spacing:.065em; white-space:nowrap; }
+    .brand-subtitle::before,.brand-subtitle::after { content:''; width:52px; max-width:22%; height:1px; background:linear-gradient(90deg,transparent,#b28a47); }
+    .brand-subtitle::after { background:linear-gradient(90deg,#b28a47,transparent); }
+    .hero { max-width:none; width:100%; min-height:clamp(550px,68vh,850px); display:flex; align-items:center; position:relative; isolation:isolate; overflow:hidden; background:#dcdcd6; }
+    .hero::before { content:''; position:absolute; inset:-8px; background-image:url('hero.png'); background-size:cover; background-position:center 50%; filter:blur(2.5px); z-index:-2; transform:scale(1.02); }
+    .hero::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.85) 26%,rgba(255,255,255,.48) 51%,rgba(255,255,255,.02) 79%); z-index:-1; }
+    .hero-copy { width:min(780px,63%); padding:95px clamp(28px,8vw,145px); }
+    .hero-copy p { color:#283b4d; }
+    @media(max-width:860px) {
+      header { height:99px; }
+      .brand-logo img { height:49px; max-width:200px; }
+      .brand-subtitle { font-size:13px; gap:8px; }
+      .brand-subtitle::before,.brand-subtitle::after { width:29px; }
+      .hero { min-height:650px; }
+      .hero::before { background-position:61% center; }
+      .hero::after { background:linear-gradient(90deg,rgba(255,255,255,.91),rgba(255,255,255,.66) 62%,rgba(255,255,255,.13)); }
+      .hero-copy { width:min(600px,92%); padding:76px 26px; }
+    }
+    @media(max-width:650px) {
+      header { height:88px; }
+      .hero { min-height:580px; }
+      .hero::before { background-position:61% center; }
+      .hero::after { background:linear-gradient(180deg,rgba(255,255,255,.83) 0%,rgba(255,255,255,.68) 58%,rgba(255,255,255,.12) 100%); }
+      .hero-copy { width:100%; padding:65px 25px; }
+      .hero-copy h1 { font-size:clamp(53px,12vw,70px); }
+    }
+
   </style>
 </head>
 <body>
-  <div class="announcement">Collection Provence · 99 € · Livraison 4,99 €</div>
+  <div class="announcement">Collection Provence · Livraison 4,99 €</div>
 
   <header>
     <div class="nav">
-      <a href="#haut" class="logo brand-logo" aria-label="PATCHWORK, accueil"><img src="logo.png" alt="PATCHWORK" onerror="this.style.display='none';this.parentNode.append('PATCHWORK')"></a>
+      <a href="#haut" class="logo brand-logo" aria-label="PATCHWORK, accueil"><img src="logo.png" alt="PATCHWORK" onerror="this.style.display='none';this.parentNode.append('PATCHWORK')"><span class="brand-subtitle">de Provence</span></a>
       <nav class="navlinks" aria-label="Navigation principale">
         <a href="#collection">Collection</a>
         <a href="#atelier">Engagements</a>
@@ -548,20 +581,13 @@
         <p>Sept tennis en toile. Une signature singulière, des matières choisies et des couleurs inspirées d'Aix-en-Provence. Le modèle parle de lui-même.</p>
         <a class="button dark" href="#collection">Découvrir les modèles <span aria-hidden="true">↗</span></a>
       </div>
-      <div class="hero-art">
-        <img class="hero-img" src="hero.png" alt="Collection PATCHWORK en Provence" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="placeholder hero-placeholder" style="display:none" role="img" aria-label="Emplacement réservé pour la photo principale">
-          <svg viewBox="0 0 80 65" aria-hidden="true"><rect x="8" y="10" width="64" height="45" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="53" cy="25" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 51L27 34L38 44L47 37L70 54" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          <span>Photo signature à venir</span>
-        </div>
-      </div>
     </section>
 
     <div class="strip">
       <span><i class="dot"></i>Inspirées de Provence</span>
       <span><i class="dot"></i>Toile canvas</span>
       <span><i class="dot"></i>Fabrication française</span>
-      <span><i class="dot"></i>99 €</span>
+      <span><i class="dot"></i>Éditions en toile</span>
     </div>
 
     <section id="collection" class="container" aria-labelledby="collectionTitle">
