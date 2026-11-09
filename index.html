@@ -513,6 +513,16 @@
       .eco-section { padding:70px 0 60px; }
       footer { padding:42px 20px 28px; }
     }
+    .logo.brand-logo { display:inline-flex; align-items:center; min-width:180px; }
+    .brand-logo img { height:54px; max-width:min(290px,45vw); width:auto; object-fit:contain; }
+    footer .brand-logo img { height:48px; }
+    .footer-visual { display:block; width:100%; height:auto; max-height:450px; object-fit:cover; object-position:center; }
+    .product-photo .product-img { width:100%; height:100%; object-fit:contain; padding:16px; display:block; }
+    .hero-art .hero-img { position:relative; z-index:2; width:100%; height:100%; max-height:450px; object-fit:contain; }
+    .fabric-placeholder { overflow:hidden; }
+    .fabric-placeholder .fabric-img { width:100%; height:100%; display:block; object-fit:cover; position:absolute; inset:0; z-index:2; }
+    .catalog-status { font-size:12px; color:var(--muted); text-align:center; margin:0 0 18px; min-height:18px; }
+    @media(max-width:650px) { .brand-logo img { height:38px; max-width:190px; } footer .brand-logo img {height:40px;} }
   </style>
 </head>
 <body>
@@ -520,7 +530,7 @@
 
   <header>
     <div class="nav">
-      <a href="#haut" class="logo">PATCHWORK<small>PATCHWORK-TENNIS.FR</small></a>
+      <a href="#haut" class="logo brand-logo" aria-label="PATCHWORK, accueil"><img src="logo.png" alt="PATCHWORK" onerror="this.style.display='none';this.parentNode.append('PATCHWORK')"></a>
       <nav class="navlinks" aria-label="Navigation principale">
         <a href="#collection">Collection</a>
         <a href="#atelier">Engagements</a>
@@ -539,7 +549,8 @@
         <a class="button dark" href="#collection">Découvrir les modèles <span aria-hidden="true">↗</span></a>
       </div>
       <div class="hero-art">
-        <div class="placeholder hero-placeholder" role="img" aria-label="Emplacement réservé pour la photo principale">
+        <img class="hero-img" src="hero.png" alt="Collection PATCHWORK en Provence" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="placeholder hero-placeholder" style="display:none" role="img" aria-label="Emplacement réservé pour la photo principale">
           <svg viewBox="0 0 80 65" aria-hidden="true"><rect x="8" y="10" width="64" height="45" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="53" cy="25" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 51L27 34L38 44L47 37L70 54" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
           <span>Photo signature à venir</span>
         </div>
@@ -559,7 +570,7 @@
         <h2 id="collectionTitle">Sept façons d'être soi.</h2>
         <p>Un caractère différent pour chaque modèle. Une même ligne, simple et intemporelle.</p>
       </div>
-      <div class="product-grid" id="productGrid"></div>
+      <div class="catalog-status" id="catalogStatus" role="status" aria-live="polite">Chargement du catalogue…</div><div class="product-grid" id="productGrid"></div>
     </section>
 
     <section class="eco-section" id="atelier" aria-labelledby="atelierTitle">
@@ -585,7 +596,8 @@
           <div class="eco-label left bottom">Production<br>raisonnée</div>
           <div class="eco-label right top">Toile résistante<br>et durable</div>
           <div class="eco-label right bottom">Circuits courts,<br>transport réduit</div>
-          <div class="fabric-placeholder" role="img" aria-label="Emplacement réservé pour la photo de la toile à plat">
+          <div class="fabric-placeholder" role="img" aria-label="Toile PATCHWORK posée à plat">
+            <img class="fabric-img" src="toile.png" alt="Toile multicolore PATCHWORK sur établi" onerror="this.style.display='none'">
             <svg viewBox="0 0 80 65" aria-hidden="true"><rect x="8" y="10" width="64" height="45" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="53" cy="25" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 51L27 34L38 44L47 37L70 54" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
             <b>Toile à plat</b>
             <span>Photo à venir</span>
@@ -600,9 +612,10 @@
     </section>
   </main>
 
+  <img class="footer-visual" src="footer.png" alt="Atelier et univers PATCHWORK" onerror="this.style.display='none'">
   <footer>
     <div class="footer-inner">
-      <a href="#haut" class="logo">PATCHWORK<small>PATCHWORK-TENNIS.FR</small></a>
+      <a href="#haut" class="logo brand-logo" aria-label="PATCHWORK, accueil"><img src="logo.png" alt="PATCHWORK" onerror="this.style.display='none';this.parentNode.append('PATCHWORK')"></a>
       <div class="footer-links">
         <a href="#collection">Collection</a>
         <a href="#atelier">Engagements</a>
@@ -610,7 +623,7 @@
         <a href="mailto:contact@patchwork-tennis.fr">Contact</a>
       </div>
     </div>
-    <div class="fine-print">© <span id="year"></span> PATCHWORK. Prototype de boutique en ligne. Photos, stock et paiement à compléter. Les visuels produits et la photo de la toile pourront être reliés ensuite à Google Drive.</div>
+    <div class="fine-print">© <span id="year"></span> PATCHWORK. Prototype de boutique en ligne. Photos, stock et paiement à compléter. Catalogue synchronisé avec Google Sheets. Photos chargées depuis le site.</div>
   </footer>
 
   <div class="overlay" id="overlay"></div>
@@ -632,46 +645,65 @@
 
   <script>
     'use strict';
-    const PRICE = 99;
+    const API_URL = "https://script.google.com/macros/s/AKfycbzskLipK6Wcrh37cWuVvy-wHrA4jgPtXq5deGvNkb7epquOkkzparCM4y4OP9Wy-jda/exec";
     const DELIVERY = 4.99;
-    const products = [
-      {id:'001',name:'001',subtitle:'Le modèle signature · Marine, rouge, moutarde et écru',colors:['#1d3558','#9e413c','#d5a537','#efe8d7']},
-      {id:'mistral',name:'Mistral',subtitle:'Bleu ciel, bleu marine et écru',colors:['#9ac5e5','#1d3558','#efe8d7']},
-      {id:'occitan',name:'Occitan',subtitle:'Rouge, jaune moutarde et écru',colors:['#a23d35','#d5a537','#efe8d7']},
-      {id:'mazarin',name:'Mazarin',subtitle:'Écru et rouge',colors:['#efe8d7','#a23d35']},
-      {id:'roussillon',name:'Roussillon',subtitle:'Écru et ocre',colors:['#efe8d7','#bb632d']},
-      {id:'jas',name:'Jas',subtitle:'Écru et jaune moutarde',colors:['#efe8d7','#d5a537']},
-      {id:'royal',name:'Royal',subtitle:'Écru, bleu marine et rouge',colors:['#efe8d7','#1d3558','#a23d35']}
-    ];
     const $ = id => document.getElementById(id);
+    const money = n => Number(n).toLocaleString('fr-FR', {style:'currency',currency:'EUR'});
+    const safe = v => String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const colors = {'bleu marine':'#1d3558','marine':'#1d3558','bleu ciel':'#9ac5e5','bleu':'#446e9e','rouge':'#a23d35','jaune moutarde':'#d5a537','moutarde':'#d5a537','jaune':'#d5a537','écru':'#efe8d7','ocre':'#bb632d'};
+    let products = [];
     let cart = [];
-    const money = n => n.toLocaleString('fr-FR', {style:'currency', currency:'EUR'});
-    const photo = `<div class="placeholder" aria-label="Emplacement réservé pour la photo du modèle"><svg viewBox="0 0 80 65" aria-hidden="true"><rect x="8" y="10" width="64" height="45" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="53" cy="25" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 51L27 34L38 44L47 37L70 54" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span>Visuel à venir</span></div>`;
+    const photoFallback = `<div class="placeholder" aria-label="Photo du modèle à venir"><span>Visuel à venir</span></div>`;
 
-    $('productGrid').innerHTML = products.map((p,i) => `
-      <article class="product">
-        <div class="product-photo"><span class="product-no">${String(i+1).padStart(2,'0')} / 07</span>${photo}</div>
-        <div class="product-info">
-          <div class="name-line"><h3>${p.name}</h3><span class="price">${money(PRICE)}</span></div>
-          <p class="product-sub">${p.subtitle}</p>
-          <div class="swatches" aria-label="Couleurs">${p.colors.map(c => `<span class="swatch" style="background:${c}"></span>`).join('')}</div>
-          <div class="purchase">
-            <select id="size-${p.id}" aria-label="Pointure pour ${p.name}">
-              <option value="">Pointure</option>
-              ${Array.from({length:7},(_,j)=>`<option value="${j+36}">${j+36}</option>`).join('')}
-            </select>
-            <button class="button" type="button" data-product="${p.id}">Ajouter au panier +</button>
+    // Un simple nom de fichier dans Sheets est chargé depuis le même dossier que index.html.
+    function photoURL(value) {
+      const v = String(value || '').trim();
+      if (/^https:\/\/[^\s]+$/i.test(v)) return v;
+      if (/^[a-zA-Z0-9_.-]+\.(png|jpe?g|webp)$/i.test(v)) return v;
+      return '';
+    }
+
+    function renderProducts() {
+      $('productGrid').innerHTML = products.map((p,i) => {
+        const image = photoURL(p.photos[0]);
+        const picture = image ? `<img class="product-img" src="${safe(image)}" alt="PATCHWORK ${safe(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="placeholder" style="display:none"><span>Visuel à venir</span></div>` : photoFallback;
+        const swatches = p.couleurs.split(',').map(x => colors[x.trim().toLowerCase()]).filter(Boolean);
+        const options = Array.from({length:7},(_,i)=>i+36).map(size=>{
+          const available = p.tailles[String(size)];
+          return `<option value="${size}" ${available === 0 ? 'disabled' : ''}>${size}${available===0 ? ' (épuisé)' : ''}</option>`;
+        }).join('');
+        return `<article class="product">
+          <div class="product-photo"><span class="product-no">${String(i+1).padStart(2,'0')} / ${String(products.length).padStart(2,'0')}</span>${picture}</div>
+          <div class="product-info">
+            <div class="name-line"><h3>${safe(p.name)}</h3><span class="price">${money(p.prixTTC)}</span></div>
+            <p class="product-sub">${safe(p.description)}</p>
+            <div class="swatches" aria-label="Couleurs">${swatches.map(c=>`<span class="swatch" style="background:${c}"></span>`).join('')}</div>
+            <div class="purchase"><select id="size-${safe(p.id)}" aria-label="Pointure pour ${safe(p.name)}"><option value="">Pointure</option>${options}</select><button class="button" type="button" data-product="${safe(p.id)}">Ajouter au panier +</button></div>
           </div>
-        </div>
-      </article>`).join('') + `
-      <div class="signature">
-        <div>
-          <span class="eyebrow">Le modèle fondateur</span>
-          <h3>Tout commence avec 001.</h3>
-          <p>Un jeu de couleurs inspiré des toiles provençales. La silhouette qui donne le ton à toute la collection.</p>
-        </div>
-        <span class="seal">001</span>
-      </div>`;
+        </article>`;
+      }).join('') + `<div class="signature"><div><span class="eyebrow">Le modèle fondateur</span><h3>Tout commence avec 001.</h3><p>Un jeu de couleurs inspiré des toiles provençales. La silhouette qui donne le ton à toute la collection.</p></div><span class="seal">001</span></div>`;
+    }
+
+    async function loadCatalog() {
+      try {
+        const response = await fetch(API_URL, {cache:'no-store', redirect:'follow'});
+        if (!response.ok) throw new Error('HTTP '+response.status);
+        const data = await response.json();
+        if (data.ok !== true || !Array.isArray(data.produits)) throw new Error(data.erreur || 'Réponse incorrecte');
+        products = data.produits.filter(p=>p && p.id && Number(p.prixTTC)>0).map(p=>({
+          id:String(p.id),name:String(p.nom||p.id),description:String(p.description||''),
+          couleurs:String(p.couleurs||''),prixTTC:Number(p.prixTTC),
+          photos:Array.isArray(p.photos)?p.photos:[],
+          tailles:p.tailles && typeof p.tailles==='object'?p.tailles:{}
+        }));
+        $('catalogStatus').textContent = products.length ? '' : 'Aucun produit visible dans le catalogue.';
+        renderProducts();
+        renderCart();
+      } catch (e) {
+        console.error('PATCHWORK catalogue:',e);
+        $('catalogStatus').textContent = 'Catalogue indisponible. Vérifie le déploiement Apps Script et les autorisations.';
+      }
+    }
 
     $('productGrid').addEventListener('click', e => {
       const btn = e.target.closest('[data-product]');
@@ -684,6 +716,11 @@
         return;
       }
       const found = cart.find(it => it.id === product.id && it.size === size);
+      const available = product.tailles[String(size)];
+      if (typeof available === 'number' && (found?.quantity || 0) >= available) {
+        toast('Cette pointure n’est plus disponible.');
+        return;
+      }
       if (found) found.quantity++;
       else cart.push({id:product.id, size, quantity:1});
       renderCart();
@@ -692,12 +729,12 @@
 
     function renderCart() {
       const qty = cart.reduce((sum,it) => sum + it.quantity, 0);
-      const subtotal = qty * PRICE;
+      const subtotal = cart.reduce((sum,it) => sum + it.quantity * (products.find(p=>p.id===it.id)?.prixTTC || 0), 0);
       const shipping = qty ? DELIVERY : 0;
       $('cartCount').textContent = qty;
       $('cartItems').innerHTML = qty ? cart.map((it,index) => {
         const p = products.find(p => p.id === it.id);
-        return `<div class="cart-item"><div><b>${p.name}</b><p>Pointure ${it.size} · Quantité ${it.quantity}</p><button type="button" class="remove" data-remove="${index}" aria-label="Retirer une unité de ${p.name}, pointure ${it.size}">Retirer une unité</button></div><strong>${money(PRICE * it.quantity)}</strong></div>`;
+        return `<div class="cart-item"><div><b>${p.name}</b><p>Pointure ${it.size} · Quantité ${it.quantity}</p><button type="button" class="remove" data-remove="${index}" aria-label="Retirer une unité de ${p.name}, pointure ${it.size}">Retirer une unité</button></div><strong>${money(p.prixTTC * it.quantity)}</strong></div>`;
       }).join('') : '<div class="empty">Votre panier est vide.<br>Découvrez les sept modèles de la collection.</div>';
       $('subtotal').textContent = money(subtotal);
       $('shipping').textContent = money(shipping);
@@ -737,7 +774,7 @@
     }
 
     $('year').textContent = new Date().getFullYear();
-    renderCart();
+    loadCatalog();
   </script>
 </body>
 </html>
